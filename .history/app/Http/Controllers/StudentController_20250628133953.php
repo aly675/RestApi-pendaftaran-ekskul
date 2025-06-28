@@ -15,7 +15,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $students = Student::with('extracurriculars')->paginate(10);
-        return JsonResponseHelper::paginated('res_partner', 'list', $students);
+        return JsonResponseHelper::paginated($students);
     }
 
     /**

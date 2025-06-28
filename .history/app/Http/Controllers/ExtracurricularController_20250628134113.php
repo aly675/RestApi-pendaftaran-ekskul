@@ -29,7 +29,7 @@ class ExtracurricularController extends Controller
 
         try {
             $extracurricular = Extracurricular::create($data);
-            return JsonResponseHelper::success( $extracurricular, 201);
+            return JsonResponseHelper::success(201);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menyimpan data', 500);
         }

@@ -131,7 +131,7 @@ class StudentController extends Controller
 
         try {
             $student->delete();
-            return JsonResponseHelper::success(['message' => 'Data berhasil dihapus']);
+            return JsonResponseHelper::success( ['message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menghapus data', 500);
         }

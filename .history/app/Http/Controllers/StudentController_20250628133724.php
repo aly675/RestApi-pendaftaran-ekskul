@@ -51,7 +51,7 @@ class StudentController extends Controller
             }
 
             // Return JSON rapi hanya ID ekskul
-            return JsonResponseHelper::success( [
+            return JsonResponseHelper::success('res_partner', 'create, [
                 'id' => $student->id,
                 'name' => $student->name,
                 'mobile' => $student->mobile,
@@ -79,7 +79,7 @@ class StudentController extends Controller
             return JsonResponseHelper::error('Data tidak ditemukan', 404);
         }
 
-        return JsonResponseHelper::success($student);
+        return JsonResponseHelper::success('res_partner', 'show', $student);
     }
 
     /**
@@ -111,7 +111,7 @@ class StudentController extends Controller
                 $student->extracurriculars()->sync($data['extracurricular_ids']);
             }
 
-            return JsonResponseHelper::success( $student->load('extracurriculars'));
+            return JsonResponseHelper::success('res_partner', 'update', $student->load('extracurriculars'));
 
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat mengupdate data', 500);
@@ -131,7 +131,7 @@ class StudentController extends Controller
 
         try {
             $student->delete();
-            return JsonResponseHelper::success(['message' => 'Data berhasil dihapus']);
+            return JsonResponseHelper::success('res_partner', 'delete', ['message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menghapus data', 500);
         }

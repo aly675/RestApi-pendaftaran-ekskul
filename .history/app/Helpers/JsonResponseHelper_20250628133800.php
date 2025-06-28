@@ -19,6 +19,8 @@ class JsonResponseHelper
     {
         return response()->json([
             'params' => [
+                'model' => $model,
+                'call' => $call,
                 'values' => $values,
             ]
         ], $code);

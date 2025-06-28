@@ -15,7 +15,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         $students = Student::with('extracurriculars')->paginate(10);
-        return JsonResponseHelper::paginated('res_partner', 'list', $students);
+        return JsonResponseHelper::paginated( 'list', $students);
     }
 
     /**
@@ -79,7 +79,7 @@ class StudentController extends Controller
             return JsonResponseHelper::error('Data tidak ditemukan', 404);
         }
 
-        return JsonResponseHelper::success($student);
+        return JsonResponseHelper::success( 'show', $student);
     }
 
     /**
@@ -111,7 +111,7 @@ class StudentController extends Controller
                 $student->extracurriculars()->sync($data['extracurricular_ids']);
             }
 
-            return JsonResponseHelper::success( $student->load('extracurriculars'));
+            return JsonResponseHelper::success( 'update', $student->load('extracurriculars'));
 
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat mengupdate data', 500);
@@ -131,7 +131,7 @@ class StudentController extends Controller
 
         try {
             $student->delete();
-            return JsonResponseHelper::success(['message' => 'Data berhasil dihapus']);
+            return JsonResponseHelper::success( 'delete', ['message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menghapus data', 500);
         }

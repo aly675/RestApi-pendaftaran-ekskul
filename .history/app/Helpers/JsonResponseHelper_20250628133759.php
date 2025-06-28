@@ -15,10 +15,12 @@ class JsonResponseHelper
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function success($values, $code = 200)
+    public static function success( $values, $code = 200)
     {
         return response()->json([
             'params' => [
+                'model' => $model,
+                'call' => $call,
                 'values' => $values,
             ]
         ], $code);

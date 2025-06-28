@@ -29,7 +29,7 @@ class ExtracurricularController extends Controller
 
         try {
             $extracurricular = Extracurricular::create($data);
-            return JsonResponseHelper::success( $extracurricular, 201);
+            return JsonResponseHelper::success('extracurricular', 'create', $extracurricular, 201);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menyimpan data', 500);
         }
@@ -46,7 +46,7 @@ class ExtracurricularController extends Controller
             return JsonResponseHelper::error('Data tidak ditemukan', 404);
         }
 
-        return JsonResponseHelper::success( $extracurricular);
+        return JsonResponseHelper::success('extracurricular', 'show', $extracurricular);
     }
 
     /**
@@ -67,7 +67,7 @@ class ExtracurricularController extends Controller
 
         try {
             $extracurricular->update($data);
-            return JsonResponseHelper::success( $extracurricular);
+            return JsonResponseHelper::success('extracurricular', 'update', $extracurricular);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat mengupdate data', 500);
         }

@@ -21,51 +21,51 @@ class StudentController extends Controller
     /**
      * Simpan siswa baru + attach ekskul.
      */
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'mobile' => 'required|string',
-            'email' => 'required|email|unique:students,email',
-            'street' => 'nullable|string',
-            'grade' => 'nullable|string',
-            'major' => 'nullable|in:AKL,MP,BR,RPL',
-            'extracurricular_ids' => 'nullable|array',
-            'extracurricular_ids.*' => 'exists:extracurriculars,id',
+ public function store(Request $request)
+{
+    $data = $request->validate([
+        'name' => 'required|string',
+        'mobile' => 'required|string',
+        'email' => 'required|email|unique:students,email',
+        'street' => 'nullable|string',
+        'grade' => 'nullable|string',
+        'major' => 'nullable|in:AKL,MP,BR,RPL',
+        'extracurricular_ids' => 'nullable|array',
+        'extracurricular_ids.*' => 'exists:extracurriculars,id',
+    ]);
+
+    try {
+        // Simpan data student
+        $student = Student::create([
+            'name' => $data['name'],
+            'mobile' => $data['mobile'],
+            'email' => $data['email'],
+            'street' => $data['street'] ?? null,
+            'grade' => $data['grade'] ?? null,
+            'major' => $data['major'] ?? null,
         ]);
 
-        try {
-            // Simpan data student
-            $student = Student::create([
-                'name' => $data['name'],
-                'mobile' => $data['mobile'],
-                'email' => $data['email'],
-                'street' => $data['street'] ?? null,
-                'grade' => $data['grade'] ?? null,
-                'major' => $data['major'] ?? null,
-            ]);
-
-            // Attach ekskul jika ada
-            if (!empty($data['extracurricular_ids'])) {
-                $student->extracurriculars()->attach($data['extracurricular_ids']);
-            }
-
-            // Return JSON rapi hanya ID ekskul
-            return JsonResponseHelper::success( [
-                'id' => $student->id,
-                'name' => $student->name,
-                'mobile' => $student->mobile,
-                'email' => $student->email,
-                'street' => $student->street,
-                'grade' => $student->grade,
-                'major' => $student->major,
-                'extracurricular_ids' => $data['extracurricular_ids'] ?? [],
-            ], 201);
-
-        } catch (\Exception $e) {
-            return JsonResponseHelper::error('Terjadi kesalahan saat menyimpan data', 500);
+        // Attach ekskul jika ada
+        if (!empty($data['extracurricular_ids'])) {
+            $student->extracurriculars()->attach($data['extracurricular_ids']);
         }
+
+        // Return JSON rapi hanya ID ekskul
+        return JsonResponseHelper::success('res_partner', 'create', [
+            'id' => $student->id,
+            'name' => $student->name,
+            'mobile' => $student->mobile,
+            'email' => $student->email,
+            'street' => $student->street,
+            'grade' => $student->grade,
+            'major' => $student->major,
+            'extracurricular_ids' => $data['extracurricular_ids'] ?? [],
+        ], 201);
+
+    } catch (\Exception $e) {
+        return JsonResponseHelper::error('Terjadi kesalahan saat menyimpan data', 500);
     }
+}
 
 
     /**
@@ -79,7 +79,7 @@ class StudentController extends Controller
             return JsonResponseHelper::error('Data tidak ditemukan', 404);
         }
 
-        return JsonResponseHelper::success($student);
+        return JsonResponseHelper::success('res_partner', 'show', $student);
     }
 
     /**
@@ -111,7 +111,7 @@ class StudentController extends Controller
                 $student->extracurriculars()->sync($data['extracurricular_ids']);
             }
 
-            return JsonResponseHelper::success( $student->load('extracurriculars'));
+            return JsonResponseHelper::success('res_partner', 'update', $student->load('extracurriculars'));
 
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat mengupdate data', 500);
@@ -131,7 +131,7 @@ class StudentController extends Controller
 
         try {
             $student->delete();
-            return JsonResponseHelper::success(['message' => 'Data berhasil dihapus']);
+            return JsonResponseHelper::success('res_partner', 'delete', ['message' => 'Data berhasil dihapus']);
         } catch (\Exception $e) {
             return JsonResponseHelper::error('Terjadi kesalahan saat menghapus data', 500);
         }
